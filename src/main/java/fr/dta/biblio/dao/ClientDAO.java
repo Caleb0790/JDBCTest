@@ -1,7 +1,5 @@
 package fr.dta.biblio.dao;
 
-import java.sql.Connection;
-import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
@@ -11,39 +9,33 @@ import fr.dta.biblio.main.Client;
 public class ClientDAO {
 
 	public static boolean createClient(Client client) {
-		Connection conn = DataBaseUtils.dbConnection();
-		PreparedStatement stmt = null;
+		DataBaseUtils.dbConnection();
 
-		if (conn != null & client != null) {
 			try {
-				stmt = conn.prepareStatement("INSERT INTO client(lastname,firstname,gender) VALUES(?,?,?)",
-						Statement.RETURN_GENERATED_KEYS);
-
-				stmt.setString(1, client.getLastname());
-				stmt.setString(2, client.getFirstname());
-				if (!(client.getGender().toString().isEmpty())) {
-					stmt.setString(3, client.getGender().toString());
+				if (client != null) {
+					DataBaseUtils.stmt = DataBaseUtils.conn.prepareStatement(
+							"INSERT INTO client(lastname,firstname,gender,id_bookpref) VALUES(?,?,?,?)",
+							Statement.RETURN_GENERATED_KEYS);
+	
+					DataBaseUtils.stmt.setString(1, client.getLastname());
+					DataBaseUtils.stmt.setString(2, client.getFirstname());
+					if (!(client.getGender().toString().isEmpty())) {
+						DataBaseUtils.stmt.setString(3, client.getGender().toString());
+					}
+					DataBaseUtils.stmt.setInt(4, client.getBookPref().getId());
+					
+					DataBaseUtils.stmt.executeUpdate();
+					
+					ResultSet generatedKeys = DataBaseUtils.stmt.getGeneratedKeys();
+					generatedKeys.next();
+					client.setId(generatedKeys.getInt("id"));
 				}
-				stmt.executeUpdate();
-				ResultSet generatedKeys = stmt.getGeneratedKeys();
-				generatedKeys.next();
-				client.setId(generatedKeys.getInt("id"));
 			} catch (SQLException e) {
 				e.printStackTrace();
 			} finally {
-				if (stmt != null) {
-					try {
-						stmt.close();
-					} catch (SQLException e) {
-						e.printStackTrace();
-					}
-				}
+				DataBaseUtils.close(true);
 			}
-
-		} else	{
-			System.out.println("New client creation failed!!");
-		}
-
+			
 		return false;
 	}
 

@@ -28,8 +28,8 @@ public class App
 		}
     	
     	List<Client> cl=new ArrayList<>();
-    	cl.add(new Client("Julie","TAMI", Gender.FEMME));
-    	cl.add(new Client("Jérémy","TUWALY", Gender.HOMME));
+    	cl.add(new Client("Julie","TAMI", Gender.FEMME, bl.get(1)));
+    	cl.add(new Client("Jérémy","TUWALY", Gender.HOMME, bl.get(0)));
     	
     	for (Client client : cl) {
 			ClientDAO.createClient(client);
@@ -42,6 +42,8 @@ public class App
     	DataBaseUtils.achat(cl.get(0), bl.get(1));
     	
     	
-        System.out.println( "Hello World!" );
+    	DataBaseUtils.requete1(cl.get(0));
+    	System.out.println("=========================================================");
+    	DataBaseUtils.requete2(bl.get(3));
     }
 }

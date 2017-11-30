@@ -5,7 +5,6 @@
 	<groupId>fr.dta</groupId>
 	<artifactId>biblio</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
-	<packaging>jar</packaging>
 
 	<name>biblio</name>
 	<url>http://maven.apache.org</url>
